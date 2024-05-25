@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Average Calculator</title>
+</head>
+<body>
+    <h1>Average Calculator</h1>
+    <p>Enter a qualified ID to get the average of numbers:</p>
+    <form id="numberForm">
+        <input type="text" id="numberId" name="numberId" placeholder="Enter qualified ID (e.g. p, f, e, r)">
+        <button type="submit">Submit</button>
+    </form>
+    <div id="response"></div>
+
+    <script>
+        const form = document.getElementById('numberForm');
+        const numberId = document.getElementById('numberId');
+        const response = document.getElementById('response');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = numberId.value;
+            try {
+                const res = await fetch(`/numbers/${id}`);
+                const data = await res.json();
+                response.innerHTML = `
+                    <p>Window Previous State: ${data.windowPrevState.join(', ')}</p>
+                    <p>Window Current State: ${data.windowCurrState.join(', ')}</p>
+                    <p>Numbers: ${data.numbers.join(', ')}</p>
+                    <p>Average: ${data.avg.toFixed(2)}</p>
+                `;
+            } catch (err) {
+                response.innerHTML = `<p>Error: ${err.message}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
